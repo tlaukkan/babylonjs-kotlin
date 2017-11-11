@@ -2,7 +2,7 @@
 
 This project is work in progress to create Kotlin bindings for BabylonJS.
 
-Basic startup tutorial is tested to work.
+Basic startup tutorial with addition of WebVR camera is tested to work.
 
 ## Usage in projects
 
@@ -11,7 +11,8 @@ Copy babylon.js to your directory containing javascript libraries.
 
 ## Testing
 
-Open 'kotlin-test.html' in browser and compare with 'javascript-test.html'.
+Open project in IntelliJIdea and build.
+Open 'test.html' in browser.
 
 ## Procedure used to generate bindings.
 
