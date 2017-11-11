@@ -29,3 +29,4 @@ This project is work in progress to create Kotlin bindings for BabylonJS.
     - Fixed imports
     - Replaced 'IndicesArray with number[]'
     - Fixed numerous inconsistencies in inheritance
+    - Added dom interfaces missing from current kotlin js library.
