@@ -2,7 +2,21 @@
 
 This project is work in progress to create Kotlin bindings for BabylonJS.
 
-## Fixes done
+Basic startup tutorial is tested to work.
+
+## Usage in projects
+
+Copy the babylon and w3c folders under src director to your projects KotlinJS src directory.
+Copy babylon.js to your directory containing javascript libraries.
+
+## Testing
+
+Open 'kotlin-test.html' in browser and compare with 'javascript-test.html'.
+
+## Procedure used to generate bindings.
+
+npm install -g ts2kt
+ts2kt babylon.d.ts
 
 - Fixed ts2kt errors:
     - ts2kt: "TypeQuery" kind unsupported yet here! (babylon.d.ts:170:30 to 170:46)
