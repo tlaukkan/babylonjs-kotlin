@@ -7,43 +7,46 @@ fun main(args: Array<String>) {
     println(message)
 
     window.addEventListener("DOMContentLoaded", {
-        // get the canvas DOM element
+        // Get canvas
         var canvas = document.getElementById("renderCanvas")
-
-        // load the 3D engine
+        // Create engine
         var engine = BABYLON.Engine(canvas as HTMLCanvasElement, true)
-
-        // create a basic BJS Scene object
+        // Create scene
         var scene = BABYLON.Scene(engine)
 
-        // create a FreeCamera, and set its position to (x:0, y:5, z:-10)
-        var camera = BABYLON.FreeCamera("camera1", BABYLON.Vector3(0, 5,-10), scene)
-
-        // target the camera to scene origin
-        camera.setTarget(BABYLON.Vector3.Zero())
-
-        // attach the camera to the canvas
+        // Create camera
+        var camera = BABYLON.FreeCamera("camera1", BABYLON.Vector3(0,1.5,0), scene)
+        camera.setTarget(BABYLON.Vector3(0,1.0,3))
         camera.attachControl(canvas, false)
 
-        // create a basic light, aiming 0,1,0 - meaning, to the sky
-        var light = BABYLON.HemisphericLight("light1", BABYLON.Vector3(0,1,0), scene)
-
-        // create a built-in "sphere" shape; its constructor takes 5 params: name, width, depth, subdivisions, scene
-        var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene)
-
-        // move the sphere upward 1/2 of its height
-        sphere.position.y = 1
-
-        // create a built-in "ground" shape; its constructor takes the same 5 params as the sphere's one
-        var ground = BABYLON.Mesh.CreateGround("ground1", 6, 6, 2, scene)
-
+        // Create sky and sunlight
+        val sunPosition = BABYLON.Vector3(30, 100, 30)
+        val sunLight = BABYLON.DirectionalLight("DirectionalLight", sunPosition.scale(-1), scene)
         val skyMaterial = BABYLON.SkyMaterial("skyMaterial", scene)
         skyMaterial.backFaceCulling = false
         skyMaterial.rayleigh = 1
-        skyMaterial.inclination = -0.2
-
-        val skybox = BABYLON.Mesh.CreateBox("skyBox", 1000.0, scene)
+        skyMaterial.useSunPosition = true // Do not set sun position from azimuth and inclination
+        skyMaterial.sunPosition = sunPosition
+        val skybox = BABYLON.Mesh.CreateBox("skyBox", 512.0, scene)
         skybox.material = skyMaterial
+
+        // Create water
+        val waterMaterial = BABYLON.WaterMaterial("water_material", scene)
+        waterMaterial.backFaceCulling = true
+        waterMaterial.windForce = -10
+        waterMaterial.waveHeight = 0.25
+        waterMaterial.bumpHeight = 0.05
+        waterMaterial.waveLength = 0.1
+        waterMaterial.colorBlendFactor = 0.0
+        waterMaterial.bumpTexture = BABYLON.Texture("images/waterbump.jpg", scene) // Set the bump texture
+        waterMaterial.addToRenderList(skybox)
+        val water = BABYLON.Mesh.CreateGround("water", 512, 512, 32, scene)
+        water.position.y = -5
+        water.material = waterMaterial
+
+        // Create sphere
+        var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 1, scene)
+        sphere.position.z = 3
 
         // run the render loop
         engine.runRenderLoop({
@@ -58,12 +61,12 @@ fun main(args: Array<String>) {
         if (navigator.getVRDisplays != undefined) {
             println("WebVRCamera.")
             camera = BABYLON.WebVRFreeCamera("WebVRCamera",
-                    BABYLON.Vector3(1.1057981719934822, 1, 4.489641138090739), scene)
+                    BABYLON.Vector3(0,1.5,0), scene)
         }
         else {
             println("VRDeviceOrientation.")
             camera = BABYLON.VRDeviceOrientationFreeCamera("VRDeviceOrientation",
-                    BABYLON.Vector3(1.1057981719934822, 2, 4.489641138090739), scene)
+                    BABYLON.Vector3(0,1.5,0), scene)
         }
 
         // Touch or click the rendering canvas to enter VR Mode
