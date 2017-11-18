@@ -37,6 +37,14 @@ fun main(args: Array<String>) {
         // create a built-in "ground" shape; its constructor takes the same 5 params as the sphere's one
         var ground = BABYLON.Mesh.CreateGround("ground1", 6, 6, 2, scene)
 
+        val skyMaterial = BABYLON.SkyMaterial("skyMaterial", scene)
+        skyMaterial.backFaceCulling = false
+        skyMaterial.rayleigh = 1
+        skyMaterial.inclination = -0.2
+
+        val skybox = BABYLON.Mesh.CreateBox("skyBox", 1000.0, scene)
+        skybox.material = skyMaterial
+
         // run the render loop
         engine.runRenderLoop({
             scene.render()
