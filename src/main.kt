@@ -1,3 +1,6 @@
+import BABYLON.AbstractMesh
+import BABYLON.ParticleSystem
+import BABYLON.Skeleton
 import org.w3c.dom.HTMLCanvasElement
 import kotlin.browser.document
 import kotlin.browser.window
@@ -31,7 +34,7 @@ fun main(args: Array<String>) {
         val skybox = BABYLON.Mesh.CreateBox("skyBox", 512.0, scene)
         skybox.material = skyMaterial*/
 
-        val envTexture = BABYLON.CubeTexture("images/skyboxes/nebula/", scene, arrayOf("box_right1.png", "box_top3.png", "box_front5.png", "box_left2.png", "box_bottom4.png", "box_back6.png"))
+        val envTexture = BABYLON.CubeTexture("assets/skyboxes/nebula/", scene, arrayOf("box_right1.png", "box_top3.png", "box_front5.png", "box_left2.png", "box_bottom4.png", "box_back6.png"))
         val skybox = scene.createDefaultSkybox(envTexture, false, 4096)
 
         // Create water
@@ -51,6 +54,16 @@ fun main(args: Array<String>) {
         // Create sphere
         var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 1, scene)
         sphere.position.z = 3
+
+        BABYLON.SceneLoader.ImportMesh("", "assets/models/buddha/", "buddha.babylon", scene, { newMeshes : Array<AbstractMesh>, particleSystems : Array<ParticleSystem>, skeletons : Array<Skeleton> ->
+
+            for (newMesh in newMeshes) {
+                newMesh.position = BABYLON.Vector3(0, 0, 5)
+                break
+            }
+
+        })
+
 
         // run the render loop
         engine.runRenderLoop({

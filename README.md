@@ -14,6 +14,14 @@ Copy babylon.js to your directory containing javascript libraries.
 Open project in IntelliJIdea and build.
 Open 'test.html' in browser.
 
+## Importing Models from Blender
+
+Import STL or 3DS file to blender.
+Clear origin transformations.
+Set origin transform mode to ZYX Euler.
+Transform object correctly in edit mode i.e. by editing vertexes.
+
+
 ## Procedure used to generate bindings.
 
 npm install -g ts2kt
