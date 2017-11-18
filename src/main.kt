@@ -33,11 +33,11 @@ fun main(args: Array<String>) {
         // Create water
         val waterMaterial = BABYLON.WaterMaterial("water_material", scene)
         waterMaterial.backFaceCulling = true
-        waterMaterial.windForce = -10
+        waterMaterial.windForce = 0
         waterMaterial.waveHeight = 0.25
         waterMaterial.bumpHeight = 0.05
         waterMaterial.waveLength = 0.1
-        waterMaterial.colorBlendFactor = 0.0
+        waterMaterial.colorBlendFactor = 0.2
         waterMaterial.bumpTexture = BABYLON.Texture("images/waterbump.jpg", scene) // Set the bump texture
         waterMaterial.addToRenderList(skybox)
         val water = BABYLON.Mesh.CreateGround("water", 512, 512, 32, scene)
