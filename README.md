@@ -13,6 +13,7 @@ Copy babylon.js to your directory containing javascript libraries.
 
 Open project in IntelliJIdea and build.
 Open 'test.html' in browser.
+Press the 1/2 key between ESC and TAB to enter VR mode.
 
 ## Importing Models from Blender
 
