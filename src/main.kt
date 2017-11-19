@@ -40,10 +40,6 @@ fun main(args: Array<String>) {
         soundscape.loop = true
         soundscape.setVolume(0.5)
 
-        //val marple = BABYLON.StandardMaterial("myMaterial", scene)
-        //marple.specularColor = Color3(0.2, 0.2, 0.2)
-        //marple.diffuseTexture = BABYLON.Texture("assets/models/buddha/marple.jpg", scene)
-
         // Load model and attach soundscape to it.
         BABYLON.SceneLoader.ImportMesh("", "assets/models/buddha/", "buddha.babylon", scene, { meshes : Array<Mesh>, particleSystems : Array<ParticleSystem>, skeletons : Array<Skeleton> ->
             var first = true
@@ -61,8 +57,12 @@ fun main(args: Array<String>) {
         })
 
         // Create sphere
-        var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 1, scene)
-        sphere.position.z = 3
+        // val marble = BABYLON.StandardMaterial("SphereMarble", scene)
+        // marble.specularColor = Color3(0.2, 0.2, 0.2)
+        // marble.diffuseTexture = BABYLON.Texture("assets/models/buddha/marble-3.jpg", scene)
+        // var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 1, scene)
+        // sphere.material = marble
+        // sphere.position.z = 3
 
         // run the render loop
         engine.runRenderLoop({
