@@ -26,7 +26,7 @@ fun main(args: Array<String>) {
         setCameraWSADKeys(freeCamera)
 
         // Create lighting
-        val light = BABYLON.DirectionalLight("DirectionalLight", BABYLON.Vector3(1, -0.3, 1), scene)
+        val light = BABYLON.DirectionalLight("DirectionalLight", BABYLON.Vector3(0.2, -1, 0.2), scene)
         scene.ambientColor = Color3(0.2, 0.2, 0.2)
 
         // Create skybox
@@ -41,20 +41,9 @@ fun main(args: Array<String>) {
         soundscape.setVolume(0.5)
 
         // Load model and attach soundscape to it.
-        BABYLON.SceneLoader.ImportMesh("", "assets/models/buddha/", "buddha.babylon", scene, { meshes : Array<Mesh>, particleSystems : Array<ParticleSystem>, skeletons : Array<Skeleton> ->
-            var first = true
-            for (mesh in meshes) {
-                if (first) {
-                    soundscape!!.attachToMesh(mesh)
-                    first = false
-                }
-                scene.removeMesh(mesh)
-            }
-            var newMesh = BABYLON.Mesh.MergeMeshes(meshes, allow32BitsIndices = true)
-            //newMesh.material = marple
-            newMesh.position.z = 5
-            scene.addMesh(newMesh)
-        })
+        loadBabylonModel("buddha-statue-1", "assets/models/buddha/", "buddha.babylon", scene, Vector3(0,0, 5),soundscape)
+        loadBabylonModel("marble-block-1", "assets/models/marble/", "foliage-engraved-block.babylon", scene, Vector3(0,0, 1))
+        val marbleBlock = scene.getMeshByID("marble-block-1")
 
         // Create sphere
         // val marble = BABYLON.StandardMaterial("SphereMarble", scene)
@@ -113,6 +102,30 @@ fun main(args: Array<String>) {
         }))
     })
 
+}
+
+private fun loadBabylonModel(meshName: String, rootUrl: String, modelFileName: String, scene: Scene, position: Vector3, soundscape: Sound? = null, flat: Boolean = false) {
+    SceneLoader.ImportMesh("", rootUrl, modelFileName, scene, { meshes: Array<Mesh>, particleSystems: Array<ParticleSystem>, skeletons: Array<Skeleton> ->
+        var first = true
+        for (mesh in meshes) {
+            if (first) {
+                if (soundscape != null) {
+                    soundscape.attachToMesh(mesh)
+                }
+                first = false
+            }
+            scene.removeMesh(mesh)
+        }
+        var newMesh = Mesh.MergeMeshes(meshes, allow32BitsIndices = true)
+        newMesh.position = position
+        newMesh.id = meshName
+        newMesh.name = meshName
+        if (flat) {
+            newMesh.convertToFlatShadedMesh()
+        }
+        scene.addMesh(newMesh)
+        println("Loaded: " + newMesh.id)
+    })
 }
 
 fun setCameraWSADKeys(camera: FreeCamera) {
