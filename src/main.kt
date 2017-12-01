@@ -26,32 +26,32 @@ fun main(args: Array<String>) {
         setCameraWSADKeys(freeCamera)
 
         // Create lighting
-        val light = BABYLON.DirectionalLight("DirectionalLight", BABYLON.Vector3(0.2, -1, 0.2), scene)
-        scene.ambientColor = Color3(0.2, 0.2, 0.2)
+        val light = BABYLON.DirectionalLight("DirectionalLight", BABYLON.Vector3(-0.5664,-0.594,0.5712), scene)
+        scene.ambientColor = Color3(0.5, 0.5, 0.5)
 
         // Create skybox
         val envTexture = BABYLON.CubeTexture("assets/skyboxes/nebula/", scene, arrayOf("box_right1.png", "box_top3.png", "box_front5.png", "box_left2.png", "box_bottom4.png", "box_back6.png"))
         val skybox = scene.createDefaultSkybox(envTexture, false, 4096)
 
         // Load soundscape
-        var soundscape: BABYLON.Sound? = null
-        soundscape = BABYLON.Sound("chanting", "assets/soundscapes/singing-bowls.wav", scene)
-        soundscape.autoplay = true
+        val soundscape: BABYLON.Sound = BABYLON.Sound("chanting", "assets/soundscapes/singing-bowls.wav", scene)
         soundscape.loop = true
+        soundscape.autoplay = true
         soundscape.setVolume(0.5)
 
-        // Load model and attach soundscape to it.
-        loadBabylonModel("buddha-statue-1", "assets/models/buddha/", "buddha.babylon", scene, Vector3(0,0, 5),soundscape)
-        loadBabylonModel("marble-block-1", "assets/models/marble/", "foliage-engraved-block.babylon", scene, Vector3(0,0, 1))
-        val marbleBlock = scene.getMeshByID("marble-block-1")
+        //val shadowGenerator = BABYLON.ShadowGenerator(1024, light)
 
-        // Create sphere
-        // val marble = BABYLON.StandardMaterial("SphereMarble", scene)
-        // marble.specularColor = Color3(0.2, 0.2, 0.2)
-        // marble.diffuseTexture = BABYLON.Texture("assets/models/buddha/marble-3.jpg", scene)
-        // var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 1, scene)
-        // sphere.material = marble
-        // sphere.position.z = 3
+        // Load model and attach soundscape to it.
+        loadBabylonScene("buddha-statue-1", "assets/models/temple/", "temple.babylon", scene)
+
+        // Load model and attach soundscape to it.
+        loadBabylonModel("buddha-statue-1", "assets/models/buddha/", "buddha.babylon", scene, { mesh ->
+            mesh.position = Vector3(0, 1, 4.4)
+            mesh.scaling = Vector3(0.1, 0.1, 0.1)
+            soundscape.attachToMesh(mesh)
+            //mesh.receiveShadows = true
+            //shadowGenerator.getShadowMap().renderList = arrayOf(mesh)
+        })
 
         // run the render loop
         engine.runRenderLoop({
@@ -104,27 +104,24 @@ fun main(args: Array<String>) {
 
 }
 
-private fun loadBabylonModel(meshName: String, rootUrl: String, modelFileName: String, scene: Scene, position: Vector3, soundscape: Sound? = null, flat: Boolean = false) {
+private fun loadBabylonScene(meshName: String, rootUrl: String, modelFileName: String, scene: Scene) {
     SceneLoader.ImportMesh("", rootUrl, modelFileName, scene, { meshes: Array<Mesh>, particleSystems: Array<ParticleSystem>, skeletons: Array<Skeleton> ->
-        var first = true
+        println("Loaded: " + meshName)
+    })
+}
+
+private fun loadBabylonModel(meshName: String, rootUrl: String, modelFileName: String, scene: Scene, onSuccess: (mesh: Mesh) -> Unit) {
+    SceneLoader.ImportMesh("", rootUrl, modelFileName, scene, { meshes: Array<Mesh>, particleSystems: Array<ParticleSystem>, skeletons: Array<Skeleton> ->
         for (mesh in meshes) {
-            if (first) {
-                if (soundscape != null) {
-                    soundscape.attachToMesh(mesh)
-                }
-                first = false
-            }
             scene.removeMesh(mesh)
         }
         var newMesh = Mesh.MergeMeshes(meshes, allow32BitsIndices = true)
-        newMesh.position = position
         newMesh.id = meshName
         newMesh.name = meshName
-        if (flat) {
-            newMesh.convertToFlatShadedMesh()
-        }
+
         scene.addMesh(newMesh)
         println("Loaded: " + newMesh.id)
+        onSuccess(newMesh)
     })
 }
 
